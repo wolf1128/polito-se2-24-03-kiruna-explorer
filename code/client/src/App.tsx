@@ -1,11 +1,13 @@
 import { Container } from "react-bootstrap";
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate , useLocation} from "react-router-dom";
 import Home from "./components/Home";
 import UrbanPlanner from "./modules/UrbanPlanner/components/UrbanPlanner";
 import { useEffect, useState } from "react";
 import { User, UserContext } from "./components/UserContext";
 import API from "./API/API";
 import Login from "./components/Login";
+import NewDocument from "./components/NewDocument";
+import Header from "./components/Header";
 
 function App() {
   const [user, setUser] = useState<User | undefined>(undefined);
@@ -13,6 +15,8 @@ function App() {
   const [loginMessage, setLoginMessage] = useState<String>("");
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const hideHeader = location.pathname === "/login";
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -66,6 +70,7 @@ function App() {
   return (
     <Container fluid style={{ padding: 0, height: "100%" }}>
       <UserContext.Provider value={user}>
+        {!hideHeader && <Header/>}
         <Routes>
           <Route path="/" element={loggedIn ? <Navigate to="/home" /> : <Navigate to="/login" />} />
           <Route
@@ -74,7 +79,9 @@ function App() {
           />
           <Route path="/home" element={loggedIn ? <Home /> : <Navigate to="/login" />} />
           <Route path="/urban-planner" element={<UrbanPlanner />} />
+          <Route path="/documents/new" element={<NewDocument/>}/>
         </Routes>
+        <div></div>
       </UserContext.Provider>
     </Container>
   );

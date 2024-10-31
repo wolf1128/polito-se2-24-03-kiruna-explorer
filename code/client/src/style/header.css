@@ -1,0 +1,21 @@
+.header {
+    background-color: rgba(205, 205, 205, 0.8);
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    padding-left: 30px;
+    height: 89px;
+    display: flex;
+    align-items: center;
+    
+}
+
+.header h6 {
+    color:  #1e1e1e;
+    font-size: 24px;
+    font-weight:lighter;
+}
+.header span{
+    font-style: italic;
+    font-weight: bold;
+}
