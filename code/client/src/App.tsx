@@ -47,6 +47,8 @@ function App() {
     language: "",
     pages: "",
     georeference: [[]],
+    georeferenceName: "",
+    areaColor: "",
   });
 
   // Definizione dei layer disponibili

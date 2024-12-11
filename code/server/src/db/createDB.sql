@@ -28,7 +28,8 @@ CREATE TABLE Georeference (
 	georeferenceId INTEGER PRIMARY KEY,
 	coordinates TEXT NOT NULL,
 	georeferenceName TEXT NOT NULL,
-	isArea BOOLEAN NOT NULL
+	isArea BOOLEAN NOT NULL,
+  areaColor TEXT
 );
 
 CREATE TABLE DocumentConnections (

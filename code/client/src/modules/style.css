@@ -670,14 +670,14 @@ LOGIN
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(to bottom, #DEDEDE 0%, #768EC8 58%,  #3D52A0 100%  );
+  background: linear-gradient(to bottom, #dedede 0%, #768ec8 58%, #3d52a0 100%);
   top: 0;
 }
 
 .explorer {
   font-weight: bold;
   font-size: 36px;
-  background: -webkit-linear-gradient(left, #3d52a0, #768EC8);
+  background: -webkit-linear-gradient(left, #3d52a0, #768ec8);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -687,12 +687,11 @@ LOGIN
   font-size: 36px;
   font-weight: 300;
   color: #000000;
- 
 }
 
 .loginWrapper {
   display: flex;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   border-radius: 1px;
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -704,75 +703,72 @@ LOGIN
 
 /* "@" Icon styling */
 .input-icon {
-  font-size: 18px; 
-  color: #3D52A0; 
+  font-size: 18px;
+  color: #3d52a0;
   margin-left: 8px;
   margin-right: 10px;
 }
 
 .input-container {
-  margin-bottom: 16px; 
+  margin-bottom: 16px;
 }
 
 .input-field {
   display: flex;
   align-items: center;
-  border: 2px solid #768EC8;
+  border: 2px solid #768ec8;
   border-radius: 4px;
   padding: 8px;
-  height: 40px; 
-  box-sizing: border-box; 
+  height: 40px;
+  box-sizing: border-box;
 }
 
 .input-icon {
-  font-size: 18px; 
-  color: #3D52A0; 
-  
+  font-size: 18px;
+  color: #3d52a0;
 }
 
 .toggle-password {
   background: none;
   border: none;
   cursor: pointer;
-  color: #3D52A0; 
+  color: #3d52a0;
   padding-left: 8px;
   padding-right: 10px;
- 
 }
 
 .toggle-password:focus {
   outline: none;
 }
 
-
 .divider {
   display: flex;
   align-items: center;
   text-align: center;
-  margin: 20px 0; 
+  margin: 20px 0;
 }
 
 .divider::before,
 .divider::after {
   content: "";
   flex: auto;
-  border-top: 1px solid #898989; 
+  border-top: 1px solid #898989;
   margin: 0 10px; /* Spacing around the text */
 }
 
 .divider span {
-  font-size: 16px; 
-  color: #3D52A0; 
-  white-space: nowrap; 
+  font-size: 16px;
+  color: #3d52a0;
+  white-space: nowrap;
 }
 .visitor-resident-btn {
-  color: #3D52A0; 
-  font-size: 18px; 
-  text-decoration: none; 
+  color: #3d52a0;
+  font-size: 18px;
+  text-decoration: none;
 }
 
 .visitor-resident-btn:hover {
-  color: #5F7EC5;
+  color: #5f7ec5;
   text-decoration: underline;
 }
 
@@ -809,8 +805,7 @@ LOGIN
 
 /* Responsive button styling */
 .loginBtn {
-  background-color: #3D52A0;
-  
+  background-color: #3d52a0;
 }
 
 .loginBtn {
@@ -818,19 +813,19 @@ LOGIN
   align-items: center;
   border-radius: 4px; /* Rounded corners */
   padding: 12px;
-  border: 2px solid #768EC8;
+  border: 2px solid #768ec8;
   width: 95%; /* Full width on smaller screens */
   margin-top: 20px;
   font-size: 18px;
   text-align: center;
   transition: 0.5s;
   background-size: 200% auto;
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .loginBtn:hover {
   background-position: right center; /* change the direction of the change here */
-  background-color: #5F7EC5;
+  background-color: #5f7ec5;
   color: #fff;
   text-decoration: none;
 }
@@ -1523,4 +1518,17 @@ DOCUMENT DETAILS
 .view-linked-documents-icon {
   width: 24px;
   height: 24px;
+}
+
+.input-color-wheel,
+.form-color-wheel {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  padding: 0;
+  border: none;
+}
+.col-color-wheel {
+  width: 50px !important;
 }

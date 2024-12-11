@@ -41,6 +41,7 @@ class DocumentRoutes {
       body("pages").optional().isString(),
       body("georeference").optional({ nullable: true }).isArray(),
       body("georeferenceName").optional().isString(),
+      body("areaColor").optional().isString(),
       this.errorHandler.validateRequest,
       (req: any, res: any, next: any) =>
         this.controller
@@ -55,7 +56,8 @@ class DocumentRoutes {
             req.body.language,
             req.body.pages,
             req.body.georeference,
-            req.body.georeferenceName
+            req.body.georeferenceName,
+            req.body.areaColor
           )
           .then((data: any) => res.status(201).json(data))
           .catch((error: any) => next(error))
@@ -81,20 +83,11 @@ class DocumentRoutes {
         .custom((value) => value > 0),
       body("linkType")
         .isString()
-        .isIn([
-          "direct consequence",
-          "collateral consequence",
-          "prevision",
-          "update",
-        ]),
+        .isIn(["direct consequence", "collateral consequence", "prevision", "update"]),
       this.errorHandler.validateRequest,
       (req: any, res: any, next: any) =>
         this.controller
-          .linkDocuments(
-            req.body.documentId1,
-            req.body.documentId2,
-            req.body.linkType
-          )
+          .linkDocuments(req.body.documentId1, req.body.documentId2, req.body.linkType)
           .then(() =>
             res.status(201).json({
               status: "success",
@@ -192,12 +185,8 @@ class DocumentRoutes {
       "/filtered",
       query("title").optional().isString(),
       query("description").optional().isString(),
-      query("documentType")
-        .optional()
-        .isString(),
-      query("nodeType")
-        .optional()
-        .isString(),
+      query("documentType").optional().isString(),
+      query("nodeType").optional().isString(),
       query("stakeholders")
         .optional()
         .customSanitizer((value) => {
@@ -250,16 +239,10 @@ class DocumentRoutes {
 
     this.router.get(
       "/georeferences",
-      query("isArea")
-        .optional()
-        .isBoolean()
-        .withMessage("isArea must be a boolean"),
+      query("isArea").optional().isBoolean().withMessage("isArea must be a boolean"),
       this.errorHandler.validateRequest,
       (req: any, res: any, next: any) => {
-        const isArea =
-          req.query.isArea !== undefined
-            ? req.query.isArea === "true"
-            : undefined;
+        const isArea = req.query.isArea !== undefined ? req.query.isArea === "true" : undefined;
         this.controller
           .getGeoreferences(isArea)
           .then((georeferences) => res.status(200).json(georeferences))
@@ -341,15 +324,8 @@ class DocumentRoutes {
       this.errorHandler.validateRequest,
       (req: any, res: any, next: any) =>
         this.controller
-          .updateGeoreferenceId(
-            parseInt(req.params.documentId, 10),
-            req.body.georeferenceId
-          )
-          .then(() =>
-            res
-              .status(200)
-              .json({ message: "Georeference updated successfully" })
-          )
+          .updateGeoreferenceId(parseInt(req.params.documentId, 10), req.body.georeferenceId)
+          .then(() => res.status(200).json({ message: "Georeference updated successfully" }))
           .catch((error: any) => next(error))
     );
 
@@ -365,13 +341,11 @@ class DocumentRoutes {
           .catch((error: any) => next(error))
     );
 
-    this.router.get(
-      "/types/document-types",
-      (req: any, res: any, next: any) =>
-        this.controller
-          .getDocumentTypes()
-          .then((documentTypes) => res.status(200).json(documentTypes))
-          .catch((error: any) => next(error))
+    this.router.get("/types/document-types", (req: any, res: any, next: any) =>
+      this.controller
+        .getDocumentTypes()
+        .then((documentTypes) => res.status(200).json(documentTypes))
+        .catch((error: any) => next(error))
     );
 
     this.router.post(
@@ -386,13 +360,11 @@ class DocumentRoutes {
           .catch((error: any) => next(error))
     );
 
-    this.router.get(
-      "/types/node-types",
-      (req: any, res: any, next: any) =>
-        this.controller
-          .getNodeTypes()
-          .then((nodeTypes) => res.status(200).json(nodeTypes))
-          .catch((error: any) => next(error))
+    this.router.get("/types/node-types", (req: any, res: any, next: any) =>
+      this.controller
+        .getNodeTypes()
+        .then((nodeTypes) => res.status(200).json(nodeTypes))
+        .catch((error: any) => next(error))
     );
 
     this.router.post(
@@ -407,13 +379,11 @@ class DocumentRoutes {
           .catch((error: any) => next(error))
     );
 
-    this.router.get(
-      "/types/stakeholders",
-      (req: any, res: any, next: any) =>
-        this.controller
-          .getStakeholders()
-          .then((stakeholders) => res.status(200).json(stakeholders))
-          .catch((error: any) => next(error))
+    this.router.get("/types/stakeholders", (req: any, res: any, next: any) =>
+      this.controller
+        .getStakeholders()
+        .then((stakeholders) => res.status(200).json(stakeholders))
+        .catch((error: any) => next(error))
     );
   }
 }

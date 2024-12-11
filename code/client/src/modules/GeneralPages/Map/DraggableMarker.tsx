@@ -10,13 +10,7 @@ import markers from "../../../models/documentTypeMarkers";
 import { Button, Col, Row } from "react-bootstrap";
 import DocumentDetail from "../../../models/documentDetail";
 import ViewConnections from "../../../assets/icons/scan-eye-1.svg";
-
-const logoIcon = new L.Icon({
-  iconUrl: Logo,
-  iconSize: [40, 40],
-  iconAnchor: [16, 32],
-  popupAnchor: [0, -32],
-});
+import Georeference from "../../../models/georeference";
 
 const kirunaPosition: [number, number] = [67.85572, 20.22513];
 
@@ -26,6 +20,8 @@ interface DraggableMarkerProps {
   isViewLinkedDocuments: boolean;
   setIsViewLinkedDocuments: React.Dispatch<React.SetStateAction<boolean>>;
   mapRef: React.RefObject<L.Map | null>;
+  selectedMarkerId: number | null;
+  setSelectedMarkerId: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 const DraggableMarker = ({
@@ -34,6 +30,8 @@ const DraggableMarker = ({
   isViewLinkedDocuments,
   setIsViewLinkedDocuments,
   mapRef,
+  selectedMarkerId,
+  setSelectedMarkerId,
 }: DraggableMarkerProps) => {
   const user = useContext(UserContext);
   const showToast = useToast();
@@ -44,6 +42,7 @@ const DraggableMarker = ({
   const [documentSelected, setDocumentSelected] = useState<DocumentDetail>();
   const [allDocuments, setAllDocuments] = useState<Document[]>([]);
   const [isPolygonVisible, setIsPolygonVisible] = useState(false);
+  const [georeference, setGeoreference] = useState<Georeference>();
 
   const markerEventHandlers = useMemo(
     () => ({
@@ -60,6 +59,13 @@ const DraggableMarker = ({
   useEffect(() => {
     API.getDocumentById(document.documentId).then((doc) => setDocumentSelected(doc));
   }, [isViewLinkedDocuments]);
+
+  useEffect(() => {
+    API.getGeoreferences().then((georeferences) => {
+      const georef = georeferences.find((g) => g.georeferenceId === document.georeferenceId);
+      setGeoreference(georef);
+    });
+  }, [documentSelected]);
 
   const handleViewConnections = async () => {
     setIsViewLinkedDocuments(true);
@@ -158,13 +164,45 @@ const DraggableMarker = ({
     setDraggable((prev) => !prev);
   };
 
+  const handleMarkerClick = () => {
+    setSelectedMarkerId(document.documentId);
+  };
+
+  const handlePopupClose = () => {
+    setSelectedMarkerId(null);
+  };
+
+  const isSelected = selectedMarkerId === document.documentId;
+
+  const customIcon = new L.Icon({
+    iconUrl: Logo,
+    iconSize: isSelected ? [55, 55] : [40, 40], // Cambia la dimensione del logo se selezionato
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32],
+  });
+
+  const getCustomIcon = (documentType: string, isSelected: boolean) => {
+    const baseIcon = markers.get(documentType);
+    if (!baseIcon) return undefined;
+
+    return new L.Icon({
+      iconUrl: baseIcon.options.iconUrl,
+      iconSize: isSelected ? [55, 55] : baseIcon.options.iconSize, // Cambia la dimensione del logo se selezionato
+      iconAnchor: isSelected ? [22, 44] : baseIcon.options.iconAnchor,
+      popupAnchor: baseIcon.options.popupAnchor,
+    });
+  };
+
   return (
     <>
+      {console.log(isSelected)}
       {isPolygon && document.coordinates && isPolygonVisible && (
         <Polygon
           positions={JSON.parse(document.coordinates)}
-          color="#3d52a0"
-          fillOpacity={0.5}
+          color={georeference?.areaColor ? georeference.areaColor : "#3d52a0"}
+          fillOpacity={0.2}
+          dashArray={"5, 10"}
+          weight={5}
           eventHandlers={{
             click: (e) => {
               // Prevent the popup from opening on click of the polygon
@@ -175,10 +213,15 @@ const DraggableMarker = ({
       )}
       <Marker
         draggable={draggable}
-        eventHandlers={{ ...eventHandlers, ...markerEventHandlers }}
+        eventHandlers={{
+          ...eventHandlers,
+          ...markerEventHandlers,
+          click: handleMarkerClick,
+          popupclose: handlePopupClose,
+        }}
         position={position}
         ref={markerRef}
-        icon={document.nodeType ? markers.get(document.nodeType) : logoIcon}
+        icon={document.nodeType ? getCustomIcon(document.nodeType, isSelected) : customIcon}
       >
         <Tooltip direction="top" offset={[0, -30]} opacity={1} permanent={false}>
           {document.title}
@@ -190,6 +233,7 @@ const DraggableMarker = ({
             <p>Scale: {document.scale}</p>
             <p>Type: {document.nodeType}</p>
             <p>Issuance Date: {document.issuanceDate}</p>
+            {georeference?.isArea === 1 && <p>Area name: {georeference.georeferenceName}</p>}
             <Row>
               <Col>
                 <Button className="view-linked-documents-button" onClick={handleViewConnections}>

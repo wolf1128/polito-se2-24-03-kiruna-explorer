@@ -53,6 +53,7 @@ const AddDocumentForm = (props: Props) => {
         pages: props.document.pages.trim(),
         georeference: props.document.georeference,
         georeferenceName: props.document.georeferenceName,
+        areaColor: props.document.areaColor,
       };
 
       API.addDocument(document).then((response) => {
@@ -71,6 +72,7 @@ const AddDocumentForm = (props: Props) => {
           pages: "",
           georeference: [[]],
           georeferenceName: "",
+          areaColor: "",
         };
         props.setDocument(newDoc);
         setErrorMessage("");
@@ -93,6 +95,8 @@ const AddDocumentForm = (props: Props) => {
       language: "",
       pages: "",
       georeference: [[]],
+      georeferenceName: "",
+      areaColor: "",
     };
 
     props.setDocument(resetDoc);

@@ -31,6 +31,7 @@ const ExploreMap = ({
   const { isSidebarOpen } = useSidebar();
   const [documents, setDocuments] = useState<Document[]>([]);
   const mapRef = useRef<L.Map | null>(null);
+  const [selectedMarkerId, setSelectedMarkerId] = useState<number | null>(null);
 
   useEffect(() => {
     API.getDocuments().then((docs) => {
@@ -103,6 +104,8 @@ const ExploreMap = ({
               isViewLinkedDocuments={isViewLinkedDocuments}
               setIsViewLinkedDocuments={setIsViewLinkedDocuments}
               mapRef={mapRef}
+              selectedMarkerId={selectedMarkerId}
+              setSelectedMarkerId={setSelectedMarkerId}
             />
           ))}
         </MarkerClusterGroup>

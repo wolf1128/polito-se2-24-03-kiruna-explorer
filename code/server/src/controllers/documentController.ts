@@ -25,7 +25,8 @@ class DocumentController {
     language: string | null,
     pages: string | null,
     georeference: string[] | null,
-    georeferenceName: string | null
+    georeferenceName: string | null,
+    areaColor: string | null
   ): Promise<any> {
     issuanceDate = Utility.emptyFixer(issuanceDate);
     language = Utility.emptyFixer(language);
@@ -42,7 +43,8 @@ class DocumentController {
       language,
       pages,
       georeference,
-      georeferenceName
+      georeferenceName,
+      areaColor
     );
   }
 
@@ -61,11 +63,8 @@ class DocumentController {
 
   async getDocumentById(documentId: number): Promise<any> {
     const document = await this.documentDAO.getDocumentById(documentId);
-    const documentResources = await this.documentDAO.getResourcesByDocumentId(
-      documentId
-    );
-    const documentConnections =
-      await this.documentDAO.getConnectionDetailsByDocumentId(documentId);
+    const documentResources = await this.documentDAO.getResourcesByDocumentId(documentId);
+    const documentConnections = await this.documentDAO.getConnectionDetailsByDocumentId(documentId);
 
     const response = document
       ? {
@@ -78,18 +77,12 @@ class DocumentController {
     return response;
   }
 
-  async georeferenceDocument(
-    documentId: number,
-    georeference: string[]
-  ): Promise<boolean> {
+  async georeferenceDocument(documentId: number, georeference: string[]): Promise<boolean> {
     if (georeference == null) throw new InvalidCoordinatesError();
     return this.documentDAO.georeferenceDocument(documentId, georeference);
   }
 
-  async uploadResource(
-    documentId: number,
-    files: Express.Multer.File[]
-  ): Promise<any> {
+  async uploadResource(documentId: number, files: Express.Multer.File[]): Promise<any> {
     if (!files || files.length === 0) throw new Error("No files uploaded");
     return this.documentDAO.uploadResource(documentId, files);
   }
@@ -160,10 +153,7 @@ class DocumentController {
     );
   }
 
-  async updateGeoreferenceId(
-    documentId: number,
-    georeferenceId: number
-  ): Promise<boolean> {
+  async updateGeoreferenceId(documentId: number, georeferenceId: number): Promise<boolean> {
     return this.documentDAO.updateGeoreferenceId(documentId, georeferenceId);
   }
 

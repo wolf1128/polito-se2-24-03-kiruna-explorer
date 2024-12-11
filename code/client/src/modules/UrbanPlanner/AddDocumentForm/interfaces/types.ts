@@ -13,6 +13,7 @@ export interface NewDocument {
   //Connections: number;
   georeference: number[][] | null;
   georeferenceName?: string;
+  areaColor?: string | null;
 }
 
 export interface Props {
